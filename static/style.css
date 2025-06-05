@@ -1,3 +1,15 @@
 body{
     background-color: lightblue;
 }
+
+#login-area{
+    background-color: lightgreen;
+    padding: 1em;
+    margin: 1em;
+}
+
+main{
+    background-color: lightcoral;
+    padding: 1em;
+    margin: 1em;    
+}

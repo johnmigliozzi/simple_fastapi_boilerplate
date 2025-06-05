@@ -7,7 +7,36 @@ async function token(username,password) {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: `&username=${username}&password=${password}`
+    }).then(json => {
+        uiSetLoginStatus();
     });
+}
+
+// Log Out
+async function logout() {
+    fetch('/logout', {
+        method: 'POST'
+    }).then(json => {
+        uiSetLoginStatus();
+    });    
+}
+
+async function uiSetLoginStatus(){
+    getJsonApiResponse("http://127.0.0.1:8000/users/me")
+        .then(json => {
+            try {
+                document.getElementById("logged-in-as-user").innerHTML = `Logged in as: ${json["full_name"]}.`
+                document.getElementById("login_form").style.display = "none";
+                document.getElementById("logout_form").style.display = "block";
+            } catch(TypeError) {
+                document.getElementById("logged-in-as-user").innerHTML = `Not logged in.`
+                document.getElementById("login_form").style.display = "block";
+                document.getElementById("logout_form").style.display = "none";
+            } finally {
+                document.getElementById("username_id").value = "";
+                document.getElementById("password_id").value = "";
+            }
+        });
 }
 
 // Accept any URL and return a JS object from a JSON API
@@ -50,3 +79,5 @@ async function getData() {
             }
         })
 }
+
+uiSetLoginStatus();

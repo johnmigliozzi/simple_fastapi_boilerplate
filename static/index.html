@@ -10,6 +10,10 @@
         <script src="./app.js"></script>
     </head>
     <body>
+      <section id="login-area">
+
+        <div id="logged-in-as-user"></div>
+
         <form class="login_form" id="login_form">
             <div class="username_div">
               <input type="text" id="username_id" name="username" placeholder="Username"><br>
@@ -18,13 +22,21 @@
               <input type="password" id="password_id" name="password" placeholder="Password">
             </div>
             <div class="btn_div">
-              <input type="button" id="btn_id" value="Login" class="login_btn" onclick="token(document.getElementById('username_id').value,document.getElementById('password_id').value)">
+              <input type="button" id="login-button" value="Login" class="login_btn" onclick="token(document.getElementById('username_id').value,document.getElementById('password_id').value)">
             </div>
-          </form>
-        <div id="logged-in-as-user">Not logged in.</div>
+        </form>
+        
+        <form class="logout_form" id="logout_form">
+          <input type="button" id="logout-button" value="Logout" onclick="logout()"></div>
+        </form>
+      </section>
+
+      <main>
         <button onclick="doStuff()">Do Stuff</button>
         <input type="text" id="selected_data_id" />
         <button onclick="getData()">Get Data</button>
         <div id="data_results"></div>
+      </main>
+
     </body>
 </html>

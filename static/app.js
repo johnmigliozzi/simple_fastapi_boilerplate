@@ -7,28 +7,13 @@ async function token(username,password) {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: `&username=${username}&password=${password}`
-    }).then(res => {
-        return res.json();
-    }).then(json => {
-        console.log(json['access_token']);
-        fetch('/users/me', {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': 'Bearer ' + json['access_token']
-            }
-        }).then(res => {
-            return res.json();
-        }).then(json => {
-            console.log(json);
-        });
     });
 }
 
 // Accept any URL and return a JS object from a JSON API
-async function getJsonApiResponse(url, myHeaders) {
+async function getJsonApiResponse(url) {
     try {
-        const response = await fetch(url, {headers: myHeaders});
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -49,12 +34,7 @@ async function getData() {
     var selectedDataId = document.getElementById("selected_data_id").value;
     const url = "http://127.0.0.1:8000/get_task/" + selectedDataId;
 
-
-    const myHeaders = new Headers();
-    // myHeaders.append("username", "johndoe");
-    // myHeaders.append("password", "johndoesecret");
-
-    getJsonApiResponse(url, myHeaders)
+    getJsonApiResponse(url)
         .then(data => {
             if (data) {
                 var contentStringData = "ID:  " + data['id'] + "<br/>";

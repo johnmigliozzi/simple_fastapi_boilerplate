@@ -22,29 +22,25 @@ fake_users_db = {
         "username": "johndoe",
         "full_name": "John Doe",
         "email": "johndoe@example.com",
-        "hashed_password": '$2b$12$RYQixhK.3ntjpSSeezp39O6I2drAhZXRsTFchrAtIL04uE3KNeXTS',
-        "disabled": False,
+        "hashed_password": '$2b$12$RYQixhK.3ntjpSSeezp39O6I2drAhZXRsTFchrAtIL04uE3KNeXTS'
     },
     "alice": {
         "username": "alice",
         "full_name": "Alice Wonderson",
         "email": "alice@example.com",
-        "hashed_password": '$2b$12$XlwlFZbgd9Qo3UAl.DARK.4r8/7KbgA0TY53dFu5xV6FDDD5EojYC',
-        "disabled": True,
+        "hashed_password": '$2b$12$XlwlFZbgd9Qo3UAl.DARK.4r8/7KbgA0TY53dFu5xV6FDDD5EojYC'
     },
     "danielle": {
         "username": "danielle",
         "full_name": "Danielle Migliozzi",
         "email": "danielle@example.com",
-        "hashed_password": '$2b$12$OwatVfC6sT/ymYXfCsEOBeZoygeUwh.XQUZS4..k1bZwAGj1d32hK',
-        "disabled": False,
+        "hashed_password": '$2b$12$OwatVfC6sT/ymYXfCsEOBeZoygeUwh.XQUZS4..k1bZwAGj1d32hK'
     },
     "john": {
         "username": "john",
         "full_name": "John Migliozzi",
         "email": "john@example.com",
-        "hashed_password": '$2b$12$5lJ45GFbybzjvBz0UVc7PecSVFbjx2tg2y57Tf73blU3e/t5olccC',
-        "disabled": False,
+        "hashed_password": '$2b$12$5lJ45GFbybzjvBz0UVc7PecSVFbjx2tg2y57Tf73blU3e/t5olccC'
     },
 }
 
@@ -60,7 +56,6 @@ class User(BaseModel):
     username: str
     email: str | None = None
     full_name: str | None = None
-    disabled: bool | None = None
 
 class UserInDB(User):
     hashed_password: str
@@ -117,15 +112,6 @@ async def get_current_user(access_token: Annotated[str | None, Cookie()] = None)
         raise credentials_exception
     return user
 
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
-
-
 @app.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -160,18 +146,18 @@ async def logout(response: Response):
 
 @app.get("/users/me", response_model=User)
 async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     return current_user
 
 @app.get("/users/me/items/")
 async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 @app.get("/get_task/{id}")
-def get_task(id: int, current_user: Annotated[User, Depends(get_current_active_user)]):
+def get_task(id: int, current_user: Annotated[User, Depends(get_current_user)]):
 # def get_task(id: int):
     con = sqlite3.connect("./data.db")
     sel_task = pd.read_sql_query(

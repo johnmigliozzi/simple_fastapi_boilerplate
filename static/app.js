@@ -8,7 +8,7 @@ async function token(username,password) {
         },
         body: `&username=${username}&password=${password}`
     }).then(json => {
-        uiSetLoginStatus();
+        checkLoginStatus();
     });
 }
 
@@ -17,32 +17,44 @@ async function logout() {
     fetch('/logout', {
         method: 'POST'
     }).then(json => {
-        uiSetLoginStatus();
+        uiSetLogout();
     });    
 }
 
-async function uiSetLoginStatus(){
+async function checkLoginStatus(){
     getJsonApiResponse("http://127.0.0.1:8000/users/me")
         .then(json => {
-            try {
-                document.getElementById("logged-in-as-user").innerHTML = `Logged in as: ${json["full_name"]}.`
-                document.getElementById("login_form").style.display = "none";
-                document.getElementById("logout_form").style.display = "block";
-            } catch(TypeError) {
-                document.getElementById("logged-in-as-user").innerHTML = `Not logged in.`
-                document.getElementById("login_form").style.display = "block";
-                document.getElementById("logout_form").style.display = "none";
-            } finally {
-                document.getElementById("username_id").value = "";
-                document.getElementById("password_id").value = "";
+            if (json) {
+                uiSetLogin(json["full_name"])
             }
         });
+}
+
+async function uiSetLogin(name){
+    document.getElementById("logged-in-as-user").innerHTML = `Logged in as: ${name}.`
+    document.getElementById("login_form").style.display = "none";
+    document.getElementById("logout_form").style.display = "block";
+    uiClearLoginForm();
+}
+async function uiSetLogout(){
+    document.getElementById("logged-in-as-user").innerHTML = `Not logged in.`
+    document.getElementById("login_form").style.display = "block";
+    document.getElementById("logout_form").style.display = "none";
+    uiClearLoginForm();
+}
+
+async function uiClearLoginForm(){
+    document.getElementById("username_id").value = "";
+    document.getElementById("password_id").value = "";   
 }
 
 // Accept any URL and return a JS object from a JSON API
 async function getJsonApiResponse(url) {
     try {
         const response = await fetch(url);
+        if (response.status === 401) {
+            uiSetLogout();
+        }  
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -80,4 +92,4 @@ async function getData() {
         })
 }
 
-uiSetLoginStatus();
+checkLoginStatus();

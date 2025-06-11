@@ -17,19 +17,7 @@ SECRET_KEY = "85935d4cfcdbce5b38b823fa0f453be55a27e0fa863098d8f126f2aa88be874a"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 3
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": '$2b$12$RYQixhK.3ntjpSSeezp39O6I2drAhZXRsTFchrAtIL04uE3KNeXTS'
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": '$2b$12$XlwlFZbgd9Qo3UAl.DARK.4r8/7KbgA0TY53dFu5xV6FDDD5EojYC'
-    },
+users_list = {
     "danielle": {
         "username": "danielle",
         "full_name": "Danielle Migliozzi",
@@ -41,7 +29,7 @@ fake_users_db = {
         "full_name": "John Migliozzi",
         "email": "john@example.com",
         "hashed_password": '$2b$12$5lJ45GFbybzjvBz0UVc7PecSVFbjx2tg2y57Tf73blU3e/t5olccC'
-    },
+    }
 }
 
 class Token(BaseModel):
@@ -107,7 +95,7 @@ async def get_current_user(access_token: Annotated[str | None, Cookie()] = None)
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(users_list, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -117,7 +105,7 @@ async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     response: Response
 ):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    user = authenticate_user(users_list, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -145,20 +133,11 @@ async def logout(response: Response):
 
 
 @app.get("/users/me", response_model=User)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_user)],
-):
+async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
-
-@app.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    return [{"item_id": "Foo", "owner": current_user.username}]
 
 @app.get("/get_task/{id}")
 def get_task(id: int, current_user: Annotated[User, Depends(get_current_user)]):
-# def get_task(id: int):
     con = sqlite3.connect("./data.db")
     sel_task = pd.read_sql_query(
         f"SELECT * FROM completed_tasks WHERE id = {id}", 
@@ -166,25 +145,5 @@ def get_task(id: int, current_user: Annotated[User, Depends(get_current_user)]):
         parse_dates=['created_timestamp', 'override_date'],
     )
     return sel_task.iloc[0].to_dict()
-
-@app.put("/put_task/")
-def put_task(date: datetime, task_name: str, project_name: str):
-    con = sqlite3.connect("./data.db")
-    cursor = con.cursor()
-
-    tmstp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    cursor.execute(f"INSERT INTO completed_tasks \
-        (created_timestamp,override_date,task_name,project_name) \
-        VALUES ('{tmstp}','{date.date()}','{task_name}','{project_name}')")
-    con.commit()
-    cursor.close()
-    con.close()
-
-@app.get("/api/do_stuff/")
-def do_stuff():
-    with open("./out.txt", "w") as file:
-        tmstp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        file.write(f"printed at: {tmstp}")
 
 app.mount("/", StaticFiles(directory="static",html = True), name="static")

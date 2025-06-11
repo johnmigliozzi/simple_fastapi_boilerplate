@@ -1,5 +1,7 @@
-// Authenticate
-async function token(username,password) {
+// Log In
+async function logIn() {
+    const username = document.getElementById('username-id').value;
+    const password = document.getElementById('password-id').value;
     fetch('/token', {
         method: 'POST',
         headers: {
@@ -13,7 +15,7 @@ async function token(username,password) {
 }
 
 // Log Out
-async function logout() {
+async function logOut() {
     fetch('/logout', {
         method: 'POST'
     }).then(json => {
@@ -31,21 +33,21 @@ async function checkLoginStatus(){
 }
 
 async function uiSetLogin(name){
-    document.getElementById("logged-in-as-user").innerHTML = `Logged in as: ${name}.`
-    document.getElementById("login_form").style.display = "none";
-    document.getElementById("logout_form").style.display = "block";
+    document.getElementById("logged-in-as-user").innerHTML = `Logged in as: ${name}.`;
+    document.getElementById("login-form").style.display = "none";
+    document.getElementById("logout-form").style.display = "block";
     uiClearLoginForm();
 }
 async function uiSetLogout(){
-    document.getElementById("logged-in-as-user").innerHTML = `Not logged in.`
-    document.getElementById("login_form").style.display = "block";
-    document.getElementById("logout_form").style.display = "none";
+    document.getElementById("logged-in-as-user").innerHTML = `Not logged in.`;
+    document.getElementById("login-form").style.display = "block";
+    document.getElementById("logout-form").style.display = "none";
     uiClearLoginForm();
 }
 
 async function uiClearLoginForm(){
-    document.getElementById("username_id").value = "";
-    document.getElementById("password_id").value = "";   
+    document.getElementById("username-id").value = "";
+    document.getElementById("password-id").value = "";   
 }
 
 // Accept any URL and return a JS object from a JSON API
@@ -72,7 +74,7 @@ async function doStuff() {
 
 async function getData() {
 
-    var selectedDataId = document.getElementById("selected_data_id").value;
+    var selectedDataId = document.getElementById("selected-data-id").value;
     const url = "http://127.0.0.1:8000/get_task/" + selectedDataId;
 
     getJsonApiResponse(url)
@@ -84,10 +86,10 @@ async function getData() {
                 contentStringData += "task name:  " + data['task_name'] + "<br/>";
                 contentStringData += "project name:  " + data['project_name'] + "<br/>";
 
-                document.getElementById("data_results").innerHTML = contentStringData;
+                document.getElementById("data-results").innerHTML = contentStringData;
             }
             else {
-                document.getElementById("data_results").innerHTML = "ERROR";
+                document.getElementById("data-results").innerHTML = "ERROR";
             }
         })
 }

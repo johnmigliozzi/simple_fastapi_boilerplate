@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title></title>
-        <meta name="Author" content="John Migliozzi">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="./style.css" />
-        <link rel="icon" href="./favicon.ico" type="image/x-icon">
-        <script src="./app.js"></script>
-    </head>
-    <body>
-      <section id="login-area">
 
-        <div id="logged-in-as-user"></div>
+<head>
+  <title></title>
+  <meta name="Author" content="John Migliozzi">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <script src="./app.js"></script>
+</head>
 
-        <form id="login-form">
-            <div class="username-div">
-              <input type="text" id="username-id" name="username" placeholder="Username"><br>
-            </div>
-            <div>
-              <input type="password" id="password-id" name="password" placeholder="Password">
-            </div>
-            <div>
-              <input type="button" id="login-button" value="Login" onclick="logIn()">
-            </div>
-        </form>
-        
-        <form id="logout-form">
-          <input type="button" id="logout-button" value="Logout" onclick="logOut()">
-        </form>
-      </section>
+<body>
 
-      <main>
-        <input type="text" id="selected-data-id" />
-        <button onclick="getData()">Get Data</button>
-        <div id="data-results"></div>
-      </main>
+  <section id="login-area">
+    <div id="logged-in-as-user"></div>
+    <form id="login-form">
+      <div class="username-div">
+        <input type="text" id="username-id" name="username" placeholder="Username"><br>
+      </div>
+      <div>
+        <input type="password" id="password-id" name="password" placeholder="Password">
+      </div>
+      <div>
+        <input type="button" id="login-button" value="Login" onclick="logIn()">
+      </div>
+    </form>
+    <form id="logout-form">
+      <input type="button" id="logout-button" value="Logout" onclick="logOut()">
+    </form>
+  </section>
 
-    </body>
+  <main>
+    <input type="text" id="selected-data-id" />
+    <button onclick="getData()">Get Data</button>
+    <div id="data-results"></div>
+  </main>
+
+</body>
+
 </html>

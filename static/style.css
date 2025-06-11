@@ -1,15 +1,15 @@
-body{
+body {
     background-color: lightblue;
 }
 
-#login-area{
+#login-area {
     background-color: lightgreen;
     padding: 1em;
     margin: 1em;
 }
 
-main{
+main {
     background-color: lightcoral;
     padding: 1em;
-    margin: 1em;    
+    margin: 1em;
 }

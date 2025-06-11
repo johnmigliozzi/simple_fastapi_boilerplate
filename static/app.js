@@ -20,10 +20,10 @@ async function logOut() {
         method: 'POST'
     }).then(json => {
         uiSetLogout();
-    });    
+    });
 }
 
-async function checkLoginStatus(){
+async function checkLoginStatus() {
     getJsonApiResponse("http://127.0.0.1:8000/users/me")
         .then(json => {
             if (json) {
@@ -32,22 +32,22 @@ async function checkLoginStatus(){
         });
 }
 
-async function uiSetLogin(name){
+async function uiSetLogin(name) {
     document.getElementById("logged-in-as-user").innerHTML = `Logged in as: ${name}.`;
     document.getElementById("login-form").style.display = "none";
     document.getElementById("logout-form").style.display = "block";
     uiClearLoginForm();
 }
-async function uiSetLogout(){
+async function uiSetLogout() {
     document.getElementById("logged-in-as-user").innerHTML = `Not logged in.`;
     document.getElementById("login-form").style.display = "block";
     document.getElementById("logout-form").style.display = "none";
     uiClearLoginForm();
 }
 
-async function uiClearLoginForm(){
+async function uiClearLoginForm() {
     document.getElementById("username-id").value = "";
-    document.getElementById("password-id").value = "";   
+    document.getElementById("password-id").value = "";
 }
 
 // Accept any URL and return a JS object from a JSON API
@@ -56,7 +56,7 @@ async function getJsonApiResponse(url) {
         const response = await fetch(url);
         if (response.status === 401) {
             uiSetLogout();
-        }  
+        }
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }

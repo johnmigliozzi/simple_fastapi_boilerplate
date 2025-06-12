@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
+import secrets
 
 from typing import Annotated
 from pydantic import BaseModel
@@ -11,9 +12,7 @@ from datetime import datetime, timedelta, timezone
 import sqlite3
 import pandas as pd
 
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "85935d4cfcdbce5b38b823fa0f453be55a27e0fa863098d8f126f2aa88be874a"
+SECRET_KEY = secrets.token_urlsafe(32)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 3
 

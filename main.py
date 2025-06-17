@@ -14,33 +14,26 @@ import pandas as pd
 
 SECRET_KEY = secrets.token_urlsafe(32)
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 3
+ACCESS_TOKEN_EXPIRE_MINUTES = 11520 # 8 days
 
 users_list = {
     "danielle": {
         "username": "danielle",
         "full_name": "Danielle Migliozzi",
-        "email": "danielle@example.com",
         "hashed_password": '$2b$12$OwatVfC6sT/ymYXfCsEOBeZoygeUwh.XQUZS4..k1bZwAGj1d32hK'
     },
     "john": {
         "username": "john",
         "full_name": "John Migliozzi",
-        "email": "john@example.com",
         "hashed_password": '$2b$12$5lJ45GFbybzjvBz0UVc7PecSVFbjx2tg2y57Tf73blU3e/t5olccC'
     }
 }
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
 
 class TokenData(BaseModel):
     username: str | None = None
 
 class User(BaseModel):
     username: str
-    email: str | None = None
     full_name: str | None = None
 
 class UserInDB(User):
@@ -61,8 +54,8 @@ def get_user(db, username: str):
         user_dict = db[username]
         return UserInDB(**user_dict)
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(db, username: str, password: str):
+    user = get_user(db, username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -128,7 +121,6 @@ async def login_for_access_token(
 async def logout(response: Response):
     response.delete_cookie(key="access_token")
     return True
-
 
 @app.get("/users/me", response_model=User)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):

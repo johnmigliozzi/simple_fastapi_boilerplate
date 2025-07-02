@@ -17,15 +17,10 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 11520 # 8 days
 
 users_list = {
-    "danielle": {
-        "username": "danielle",
-        "full_name": "Danielle Migliozzi",
-        "hashed_password": '$2b$12$OwatVfC6sT/ymYXfCsEOBeZoygeUwh.XQUZS4..k1bZwAGj1d32hK'
-    },
-    "john": {
-        "username": "john",
-        "full_name": "John Migliozzi",
-        "hashed_password": '$2b$12$5lJ45GFbybzjvBz0UVc7PecSVFbjx2tg2y57Tf73blU3e/t5olccC'
+    "admin": {
+        "username": "admin",
+        "full_name": "Admin",
+        "hashed_password": '$2b$12$RgHS/xCHxwrocdSPXeSB4.YYphTs3S.myDeGl/LDU8W/Qu0HKauai'
     }
 }
 

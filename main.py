@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
 from jwt.exceptions import InvalidTokenError
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 import secrets
 
 from typing import Annotated
@@ -20,7 +20,7 @@ users_list = {
     "admin": {
         "username": "admin",
         "full_name": "Admin",
-        "hashed_password": '$2b$12$RgHS/xCHxwrocdSPXeSB4.YYphTs3S.myDeGl/LDU8W/Qu0HKauai'
+        "hashed_password": '$argon2id$v=19$m=65536,t=3,p=4$lrZ2xZm9mArqMd0sCS3Dyw$ZwGuTqGsy8jPeE5PXN20iIe/Q+IoQXnUn3nAz6l+owI'
     }
 }
 
@@ -34,15 +34,15 @@ class User(BaseModel):
 class UserInDB(User):
     hashed_password: str
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+password_hash = PasswordHash.recommended()
 
 app = FastAPI()
 
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    return password_hash.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    return password_hash.hash(password)
 
 def get_user(db, username: str):
     if username in db:

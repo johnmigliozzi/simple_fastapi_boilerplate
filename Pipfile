@@ -7,7 +7,7 @@ name = "pypi"
 fastapi = {extras = ["standard"], version = "*"}
 pandas = "*"
 pyjwt = "*"
-passlib = {extras = ["bcrypt"], version = "*"}
+pwdlib = {extras = ["argon2"], version = "*"}
 
 [dev-packages]
 

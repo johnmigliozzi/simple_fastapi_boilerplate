@@ -10,7 +10,6 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta, timezone
 import os
 import sqlite3
-import pandas as pd
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev_key")
 ALGORITHM = "HS256"
@@ -125,11 +124,13 @@ async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]
 @app.get("/get_task/{id}")
 def get_task(id: int, current_user: Annotated[User, Depends(get_current_user)]):
     con = sqlite3.connect("./data.db")
-    sel_task = pd.read_sql_query(
-        f"SELECT * FROM completed_tasks WHERE id = {id}", 
-        con, 
-        parse_dates=['created_timestamp', 'override_date'],
-    )
-    return sel_task.iloc[0].to_dict()
+    con.row_factory = sqlite3.Row
+    cursor = con.cursor()
+    cursor.execute(f"SELECT * FROM completed_tasks WHERE id = {id}")
+    sel_task = cursor.fetchone()
+    # print(f"ID: {sel_task['id']}, Name: {sel_task['name']}")
+    # print(type(sel_task))
+    # breakpoint()
+    return dict(sel_task)
 
 app.mount("/", StaticFiles(directory="static",html = True), name="static")

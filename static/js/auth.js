@@ -24,7 +24,7 @@ async function logOut() {
 }
 
 async function checkLoginStatus() {
-    getJsonApiResponse("http://127.0.0.1:8000/users/me")
+    getJsonApiResponse("/users/me")
         .then(json => {
             if (json) {
                 uiSetLogin(json["full_name"])

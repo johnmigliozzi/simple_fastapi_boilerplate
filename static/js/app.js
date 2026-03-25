@@ -1,11 +1,7 @@
-async function doStuff() {
-    getJsonApiResponse("http://127.0.0.1:8000/api/do_stuff/")
-}
-
 async function getData() {
 
     var selectedDataId = document.getElementById("selected-data-id").value;
-    const url = "http://127.0.0.1:8000/get_task/" + selectedDataId;
+    const url = "/get_task/" + selectedDataId;
 
     getJsonApiResponse(url)
         .then(data => {

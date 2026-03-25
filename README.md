@@ -16,3 +16,6 @@
 fastapi dev main.py
 ```
 
+4. Default login:
+    - Username: admin
+    - Password: password

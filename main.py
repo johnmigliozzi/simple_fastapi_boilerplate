@@ -1,20 +1,21 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status, Response, Cookie
 from fastapi.staticfiles import StaticFiles
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 import jwt
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
-import secrets
 
 from typing import Annotated
 from pydantic import BaseModel
 from datetime import datetime, timedelta, timezone
+import os
 import sqlite3
 import pandas as pd
 
-SECRET_KEY = secrets.token_urlsafe(32)
+SECRET_KEY = os.getenv("SECRET_KEY", "dev_key")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 11520 # 8 days
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "11520"))
+COOKIE_SECURE = os.getenv("COOKIE_SECURE") == "true"
 
 users_list = {
     "admin": {
@@ -107,7 +108,7 @@ async def login_for_access_token(
         value=access_token,
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES*60,
         httponly=True,
-        secure=True,
+        secure=COOKIE_SECURE,
         samesite="strict"
     )
     return True
